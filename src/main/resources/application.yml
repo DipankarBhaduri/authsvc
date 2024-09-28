@@ -122,4 +122,4 @@ aws:
   bucket:
     category-image: video-evidence-dev
 
-open_ai_key: sk-aKXHSudw39hKoZMADinLGS3-nVsAAZc6fuJadL5GXcT3BlbkFJIy9zYX2YNUmUgy29v72wopUBbl01ukv9G5FZI3e_EA
+open_ai_key: ${OPEN_API_KEY}
