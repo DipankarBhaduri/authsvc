@@ -2,7 +2,7 @@ server:
   port: 9990
   shutdown: graceful
 
-#debug: true
+debug: false
 
 logging:
   level:
@@ -10,14 +10,13 @@ logging:
     org:
       springframework:
         security: INFO
-#        web: TRACE
       mongodb:
-        driver: WARN
+        driver: INFO
       postgresql:
-        Driver: WARN
-        jdbc: WARN
+        Driver: INFO
+        jdbc: INFO
       apache:
-        catalina: WARN
+        catalina: INFO
     com:
       zaxxer:
         hikari: INFO
@@ -26,7 +25,7 @@ app:
   cors:
     allowed-origins:
   config:
-    integrationsvc: ""
+    connectifysvc: "http://localhost:9991"
     projectmgmtsvc: ""
     paymentsvc: ""
     raskengine: ""
@@ -86,62 +85,41 @@ spring:
     password: ${PG_PASSWORD}
 
 
-#management:
-#  endpoints:
-#    enabled-by-default: false
-#    web:
-#      exposure:
-#        include: "*"
-#  endpoint:
-#    health:
-#      enabled: true
-#      probes:
-#        enabled: true
-#    metrics:
-#      enabled: true
-#    prometheus:
-#      enabled: true
-#  metrics:
-#    export:
-#      prometheus:
-#        enabled: true
-#  server:
-#    port: 8010
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      enabled: true
+      probes:
+        enabled: true
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  server:
+    port: 8010
 #
 #mongo:
 #  host: mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:27017/${MONGODB_DATABASE}
 #  database: ${MONGODB_DATABASE}
 
-#mq:
-#  kyc-recon:
-#    aws:
-#      type: "STANDARD"
-#      region: ${AWS_SQS_REGION}
-#      connection: ${KYC_RECON_MQ_CONNECTION}
-#      visibility-timeout-in-seconds: 30
-#      poll-timeout-in-seconds: 0
-#      delivery-delay-in-seconds: 0
-#  assessment-result-recon:
-#    aws:
-#      type: "STANDARD"
-#      region: ${AWS_SQS_REGION}
-#      connection: ${ASSESSMENT_RESULT_RECON_MQ_CONNECTION}
-#      visibility-timeout-in-seconds: 30
-#      poll-timeout-in-seconds: 0
-#      delivery-delay-in-seconds: 0
-#  brevo-event:
-#    aws:
-#      type: "STANDARD"
-#      region: ${BREVO_EVENT_MQ_REGION}
-#      connection: ${BREVO_EVENT_MQ_CONNECTION}
-#      visibility-timeout-in-seconds: 30
-#      poll-timeout-in-seconds: 0
-#      delivery-delay-in-seconds: 0
-#
-#admin:
-#  user_name_1: ${USER_NAME_1}
-#  password_1: ${USER_PASSWORD_1}
-#  user_name_2: ${USER_NAME_2}
-#  password_2: ${USER_PASSWORD_2}
-#  user_name_3: ${USER_NAME_3}
-#  password_3: ${USER_PASSWORD_3}
+eLabs:
+  sms:
+    url: "https://2factor.in"
+    token: "ef1674ab-4e49-11eb-8153-0200cd936042"
+
+aws:
+  accessKey: ${AWS_ACCESS_KEY_ID}
+  secretKey: ${AWS_SECRET_KEY}
+  bucket:
+    category-image: video-evidence-dev
+
+open_ai_key: sk-aKXHSudw39hKoZMADinLGS3-nVsAAZc6fuJadL5GXcT3BlbkFJIy9zYX2YNUmUgy29v72wopUBbl01ukv9G5FZI3e_EA

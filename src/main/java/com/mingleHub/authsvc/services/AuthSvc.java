@@ -1,6 +1,6 @@
 package com.mingleHub.authsvc.services;
 
-import com.mingleHub.authsvc.dto.RegisterRequest;
+import com.mingleHub.authsvc.dto.onboarding.RegisterRequest;
 import com.mingleHub.authsvc.dto.auth.AuthenticationRequest;
 import com.mingleHub.authsvc.dto.auth.AuthenticationResponse;
 

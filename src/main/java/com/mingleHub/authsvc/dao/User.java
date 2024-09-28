@@ -1,11 +1,15 @@
 package com.mingleHub.authsvc.dao;
 
 import com.mingleHub.authsvc.constants.Role;
+import com.mingleHub.authsvc.constants.UserStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -42,9 +46,20 @@ public class User implements UserDetails {
     private boolean phoneVerified;
 
     private String email;
+	
+	@Enumerated(EnumType.STRING)
+	private UserStatus status;
 
     @Column(name = "is_email_verified")
     private boolean emailVerified;
+	
+	@CreationTimestamp
+	@Column(name = "created_at")
+	private LocalDateTime createdAt;
+	
+	@UpdateTimestamp
+	@Column(name = "updated_at")
+	private LocalDateTime updatedAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

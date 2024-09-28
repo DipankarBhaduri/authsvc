@@ -1,9 +1,10 @@
 package com.mingleHub.authsvc.controllers;
 
-import com.mingleHub.authsvc.dto.RegisterRequest;
+import com.mingleHub.authsvc.dto.onboarding.RegisterRequest;
 import com.mingleHub.authsvc.dto.auth.AuthenticationRequest;
 import com.mingleHub.authsvc.dto.auth.AuthenticationResponse;
 import com.mingleHub.authsvc.services.AuthSvc;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +25,11 @@ public class AuthController {
 
     @PostMapping("/register")
     public AuthenticationResponse register(
-            @RequestBody RegisterRequest registerRequest
+            @RequestBody @Valid RegisterRequest registerRequest
     ) {
         log.info("INFO :: register for user :: {}", registerRequest.getEmail());
         return authSvc.register(registerRequest);
     }
-
 
     @PostMapping("/authenticate")
     public AuthenticationResponse authenticate(

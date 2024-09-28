@@ -1,17 +1,20 @@
 package com.mingleHub.authsvc.services.impl;
 
 import com.mingleHub.authsvc.auth.impl.JwtSvcImpl;
+import com.mingleHub.authsvc.constants.Role;
 import com.mingleHub.authsvc.dao.User;
-import com.mingleHub.authsvc.dto.RegisterRequest;
+import com.mingleHub.authsvc.dto.onboarding.RegisterRequest;
 import com.mingleHub.authsvc.dto.auth.AuthenticationRequest;
 import com.mingleHub.authsvc.dto.auth.AuthenticationResponse;
 import com.mingleHub.authsvc.exceptions.DuplicateEmailException;
+import com.mingleHub.authsvc.exceptions.IncorrectCredentialsException;
 import com.mingleHub.authsvc.exceptions.UserNotFoundException;
 import com.mingleHub.authsvc.repositories.UserInfoRepository;
 import com.mingleHub.authsvc.services.AuthSvc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,17 +44,17 @@ public class AuthSvcImpl implements AuthSvc {
 
     @Override
     public AuthenticationResponse register(RegisterRequest registerRequest){
-
-        Optional<User> userDao = userInfoRepository.findByEmail(registerRequest.getEmail());
-        if (userDao.isPresent()) {
-            log.error("ERROR :: {} id already sync with another account", registerRequest.getEmail());
-            throw new DuplicateEmailException("email already sync with another account");
-        }
-
-        User userObject = new User().setId(UUID.randomUUID())
+		
+		userInfoRepository.findByEmail(registerRequest.getEmail())
+				.ifPresent(user -> {
+					log.error("ERROR :: {} is already synced with another account", registerRequest.getEmail());
+					throw new DuplicateEmailException(String.format(String.format("%s is already synced with another account", registerRequest.getEmail())));
+				});
+		
+		User userObject = new User().setId(UUID.randomUUID())
                 .setEmail(registerRequest.getEmail())
                 .setPassword(passwordEncoder.encode(registerRequest.getPassword()))
-                .setRole(registerRequest.getRole())
+                .setRole(Role.USER)
                 .setFirstName(registerRequest.getFirstName())
                 .setLastName(registerRequest.getLastName());
 
@@ -62,15 +65,25 @@ public class AuthSvcImpl implements AuthSvc {
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(
+							request.getEmail(),
+							request.getPassword()
+					)
+			);
+		} catch (BadCredentialsException e) {
+			log.error(String.format(
+					"ERROR :: either username :: %s or password %s is incorrect", request.getEmail(), request.getPassword())
+			);
+			throw new IncorrectCredentialsException("either username or password is incorrect");
+		}
 
         var user = userInfoRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("User not found for email: " + request.getEmail()));
+						   .orElseThrow(() -> new UserNotFoundException(
+										   String.format("user not found with email: %s" ,request.getEmail())
+								   )
+						   );
 
         String jwtToken = jwtSvc.generateToken(user);
         return new AuthenticationResponse().setAccessToken(jwtToken);

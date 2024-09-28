@@ -1,0 +1,29 @@
+<configuration>
+    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <springProfile name="local">
+            <encoder>
+                <pattern>%blue(%date{"yyyy-MM-dd HH:mm:ss.SSS", "Asia/Kolkata"})
+                    %highlight(%-5level) [%t]
+                    %green(%logger{36}@%method\(%line\)) - %X{x-request-id} -%5p - %msg%n%throwable
+                </pattern>
+                <charset>utf8</charset>
+            </encoder>
+        </springProfile>
+        <springProfile name="beta,prod,dev">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <jsonGeneratorDecorator
+                        class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
+                </jsonGeneratorDecorator>
+            </encoder>
+        </springProfile>
+    </appender>
+    <logger name="jsonLogger" additivity="false" level="INFO">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+    <logger name="org.springframework.cache" level="trace">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="consoleAppender"/>
+    </root>
+</configuration>

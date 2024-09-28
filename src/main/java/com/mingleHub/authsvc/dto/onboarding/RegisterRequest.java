@@ -1,18 +1,18 @@
-package com.mingleHub.authsvc.dto;
+package com.mingleHub.authsvc.dto.onboarding;
 
-import com.mingleHub.authsvc.constants.Role;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.antlr.v4.runtime.misc.NotNull;
 
 @Data
 @Accessors(chain = true)
 public class RegisterRequest {
+	@NotEmpty
     private String firstName;
+	@NotEmpty
     private String lastName;
-
-    @NotNull
+	@NotEmpty
     private String email;
+	@NotEmpty
     private String password;
-    private Role role;
 }
