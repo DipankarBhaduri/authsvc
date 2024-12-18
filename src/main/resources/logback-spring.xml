@@ -1,29 +1,36 @@
 <configuration>
     <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- Local profile configuration -->
         <springProfile name="local">
             <encoder>
-                <pattern>%blue(%date{"yyyy-MM-dd HH:mm:ss.SSS", "Asia/Kolkata"})
+                <pattern>
+                    %blue(%date{"yyyy-MM-dd HH:mm:ss.SSS", "Asia/Kolkata"})
                     %highlight(%-5level) [%t]
-                    %green(%logger{36}@%method\(%line\)) - %X{x-request-id} -%5p - %msg%n%throwable
+                    %green(%logger{36}@%method\(%line\)) - %X{x-request-id} - %msg%n%throwable
                 </pattern>
-                <charset>utf8</charset>
+                <charset>UTF-8</charset>
             </encoder>
         </springProfile>
+        <!-- Beta, prod, and dev profile configuration -->
         <springProfile name="beta,prod,dev">
             <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-                <jsonGeneratorDecorator
-                        class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator">
-                </jsonGeneratorDecorator>
+                <jsonGeneratorDecorator class="net.logstash.logback.mask.MaskingJsonGeneratorDecorator" />
             </encoder>
         </springProfile>
     </appender>
+
+    <!-- Logger for custom logs -->
     <logger name="jsonLogger" additivity="false" level="INFO">
-        <appender-ref ref="consoleAppender"/>
+        <appender-ref ref="consoleAppender" />
     </logger>
-    <logger name="org.springframework.cache" level="trace">
-        <appender-ref ref="consoleAppender"/>
+
+    <!-- Logger for Spring cache -->
+    <logger name="org.springframework.cache" level="TRACE">
+        <appender-ref ref="consoleAppender" />
     </logger>
+
+    <!-- Root logger -->
     <root level="INFO">
-        <appender-ref ref="consoleAppender"/>
+        <appender-ref ref="consoleAppender" />
     </root>
 </configuration>

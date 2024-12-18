@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public enum Role {
     ADMIN("ADMIN"),
-    MEMBER("MEMBER"),
+    SUPER_ADMIN("SUPER_ADMIN"),
     USER("USER");
 
     @Getter

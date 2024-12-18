@@ -14,6 +14,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import static com.mingleHub.authsvc.messages.Endpoints.V1_AUTH;
+import static com.mingleHub.authsvc.messages.StaticMessages.*;
 
 @Service
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -36,16 +38,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
              @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        final String authHeader = request.getHeader("Authorization");
+        final String authHeader = request.getHeader(AUTHORIZATION);
         final String jwt;
         final String email;
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith(BEARER)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7);
+        jwt = authHeader.substring(BEARER_INDEX);
         email = jwtSvcImpl.extractUsername(jwt);
 
         if(email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -65,6 +67,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
-        return request.getServletPath().contains("/v1/auth");
+        return request.getServletPath().contains(V1_AUTH);
     }
 }

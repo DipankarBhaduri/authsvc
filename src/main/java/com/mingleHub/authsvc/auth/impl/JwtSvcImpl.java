@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
+import static com.mingleHub.authsvc.messages.StaticMessages.*;
 
 @Service
 public class JwtSvcImpl implements JwtSvc {
 	private final UserInfoRepository userInfoRepository;
-    private static final String SECRET = "9a2f8c4e6b0d71f3e8b925a45747f894a3d6bc70fa8d5e21a15a6d8c3b9a0e7c";
 	
 	@Autowired
 	public JwtSvcImpl (
@@ -32,15 +32,15 @@ public class JwtSvcImpl implements JwtSvc {
     public String generateToken(UserDetails user) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .claim("authorities", populateAuthorities(user.getAuthorities()))
+                .claim(AUTHORITIES, populateAuthorities(user.getAuthorities()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRY))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -49,7 +49,7 @@ public class JwtSvcImpl implements JwtSvc {
         for(GrantedAuthority authority: authorities) {
             authoritiesSet.add(authority.getAuthority());
         }
-        return String.join(",", authoritiesSet);
+        return String.join(COMA_SEPARATED, authoritiesSet);
     }
 
     private Claims extractAllClaims(String token) {
@@ -67,9 +67,9 @@ public class JwtSvcImpl implements JwtSvc {
 
 	@Override
     public String getUser(HttpServletRequest request) {
-        final String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String jwt = authorizationHeader.substring(7);
+        final String authorizationHeader = request.getHeader(AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER)) {
+            String jwt = authorizationHeader.substring(BEARER_INDEX);
 			return userInfoRepository.findByEmail(extractUsername(jwt)).get().getId().toString();
         }
         return null;

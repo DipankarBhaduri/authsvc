@@ -12,6 +12,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
+import static com.mingleHub.authsvc.messages.ErrorLogs.ERROR_MESSAGE_FOR_POST_REQUEST;
+import static com.mingleHub.authsvc.messages.ErrorLogs.PRINT_LOG_WITH_ERROR_MESSAGE_FOR_POST_REQUEST;
+
 @Slf4j
 @Component
 public class RestTemplateHelper {
@@ -44,10 +47,10 @@ public class RestTemplateHelper {
 		    HttpEntity<?> httpEntity = new HttpEntity<>(requestBody, getHttpHeader());
 		    return restTemplate.postForObject(uriComponentsBuilder.toUriString(), httpEntity, responseType);
 		} catch (HttpClientErrorException e) {
-			throw new RestTemplateException("ERROR :: Error during postForObject API call", e);
+			throw new RestTemplateException(ERROR_MESSAGE_FOR_POST_REQUEST, e);
         } catch (Exception e) {
-            log.error("ERROR :: error during postForObject :: {}", e.getMessage(), e);
-            throw new RestTemplateException("ERROR :: error during postForObject API call", e);
+            log.error(PRINT_LOG_WITH_ERROR_MESSAGE_FOR_POST_REQUEST, e.getMessage(), e);
+            throw new RestTemplateException(ERROR_MESSAGE_FOR_POST_REQUEST, e);
         }
     }
 	

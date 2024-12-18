@@ -1,5 +1,5 @@
 server:
-  port: 9990
+  port: 9999
   shutdown: graceful
 
 debug: false
@@ -80,9 +80,9 @@ spring:
 
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${PG_HOST}:5432/testdb
-    username: ${PG_USERNAME}
-    password: ${PG_PASSWORD}
+    url: jdbc:postgresql://pg-4b157ca-country-state-pincode.l.aivencloud.com:12827/defaultdb
+    username: avnadmin
+    password: AVNS_yDWtELnIM9VVAzt6qbx
 
 
 management:

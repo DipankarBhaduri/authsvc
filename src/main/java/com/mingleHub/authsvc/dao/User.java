@@ -28,26 +28,18 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "password")
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 
-    @Column(name = "pan_number")
-    private String panNumber;
-
-    @Column(name = "is_pan_verified")
-    private boolean panVerified;
-
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
-    @Column(name = "is_phone_verified")
-    private boolean phoneVerified;
-
+    @Column(name = "email")
     private String email;
 	
 	@Enumerated(EnumType.STRING)
+    @Column(name = "status")
 	private UserStatus status;
 
     @Column(name = "is_email_verified")

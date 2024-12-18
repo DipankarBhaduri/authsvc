@@ -26,7 +26,8 @@ public class EventLogDAO {
 	@Enumerated(EnumType.STRING)
 	private EventType eventType;
 	
-	@Column private String data;
+	@Column(name = "data")
+	private String data;
 	
 	@Column(name = "created_at")
 	@CreationTimestamp

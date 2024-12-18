@@ -20,6 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 
+import static com.mingleHub.authsvc.messages.ErrorLogs.*;
+import static com.mingleHub.authsvc.messages.ErrorMessages.*;
+
 @Service
 @Slf4j
 public class AuthSvcImpl implements AuthSvc {
@@ -46,8 +49,8 @@ public class AuthSvcImpl implements AuthSvc {
 		
 		userInfoRepository.findByEmail(registerRequest.getEmail())
 				.ifPresent(user -> {
-					log.error("ERROR :: {} is already synced with another account", registerRequest.getEmail());
-					throw new DuplicateEmailException(String.format(String.format("%s is already synced with another account", registerRequest.getEmail())));
+					log.error(EMAIL_SYNCED_WITH_ANOTHER_ACCOUNT, registerRequest.getEmail());
+                    throw new DuplicateEmailException(DUPLICATE_EMAIL);
 				});
 		
 		User userObject = new User().setId(UUID.randomUUID())
@@ -73,16 +76,16 @@ public class AuthSvcImpl implements AuthSvc {
 			);
 		} catch (BadCredentialsException e) {
 			log.error(String.format(
-					"ERROR :: either username :: %s or password %s is incorrect", request.getEmail(), request.getPassword())
+                    BAD_CREDENTIALS_ERROR_LOG, request.getEmail(), request.getPassword())
 			);
-			throw new IncorrectCredentialsException("either username or password is incorrect");
+			throw new IncorrectCredentialsException(INCORRECT_CREDENTIALS);
 		}
 
         var user = userInfoRepository.findByEmail(request.getEmail())
-						   .orElseThrow(() -> new UserNotFoundException(
-										   String.format("user not found with email: %s" ,request.getEmail())
-								   )
-						   );
+						   .orElseThrow(() -> {
+                               log.error(USER_NOT_FOUND_WITH_EMAIL_ID, request.getEmail());
+                               return new UserNotFoundException(USER_NOT_FOUND);
+                           });
 
         String jwtToken = jwtSvc.generateToken(user);
         return new AuthenticationResponse().setAccessToken(jwtToken);

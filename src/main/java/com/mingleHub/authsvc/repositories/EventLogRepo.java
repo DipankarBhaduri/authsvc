@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface EventLogRepo extends JpaRepository<EventLogDAO, Long> {
-	Optional<EventLogDAO> findFirstByUserIdAndEventTypeOrderByIdDesc(String soulId, EventType eventType);
-	Optional<EventLogDAO> findByUserIdAndReferenceId(String soulId, String referenceId);
+
 }

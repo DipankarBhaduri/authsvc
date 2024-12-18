@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import static com.mingleHub.authsvc.messages.Endpoints.REQUEST_MATCHERS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -34,7 +35,7 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/v1/auth/*")
+                        req.requestMatchers(REQUEST_MATCHERS)
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated())
@@ -44,4 +45,3 @@ public class SecurityConfiguration {
                 .build();
     }
 }
-

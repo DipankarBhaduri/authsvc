@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import static com.mingleHub.authsvc.messages.InfoLogs.AUTHENTICATE_FOR_USER;
+import static com.mingleHub.authsvc.messages.InfoLogs.REGISTER_FOR_USER;
 
 @Slf4j
 @RestController
@@ -27,7 +29,7 @@ public class AuthController {
     public AuthenticationResponse register(
             @RequestBody @Valid RegisterRequest registerRequest
     ) {
-        log.info("INFO :: register for user :: {}", registerRequest.getEmail());
+        log.info(REGISTER_FOR_USER, registerRequest.getEmail());
         return authSvc.register(registerRequest);
     }
 
@@ -35,8 +37,7 @@ public class AuthController {
     public AuthenticationResponse authenticate(
             @RequestBody AuthenticationRequest request
     ) {
-        log.info("INFO :: authenticate for user :: {}", request.getEmail());
+        log.info(AUTHENTICATE_FOR_USER, request.getEmail());
         return authSvc.authenticate(request);
     }
 }
-

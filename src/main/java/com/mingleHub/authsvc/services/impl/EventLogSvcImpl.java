@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import static com.mingleHub.authsvc.messages.ErrorLogs.LOG_WITH_PAYLOAD;
 
 @Slf4j
 @Service
@@ -37,7 +37,7 @@ public class EventLogSvcImpl implements EventLogSvc {
 			  .setEventType(eventLog.getEventType())
 			  .setData(objectMapper.writeValueAsString(eventLog.getData()));
     } catch (JsonProcessingException e) {
-      log.error("ERROR :: user :: {} :: record :: {}", userID, eventLog, e);
+      log.error(LOG_WITH_PAYLOAD, userID, eventLog, e);
     }
 	eventLogRepo.save(eventLogDAO);
   }
