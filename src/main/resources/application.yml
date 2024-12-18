@@ -82,7 +82,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://pg-4b157ca-country-state-pincode.l.aivencloud.com:12827/defaultdb
     username: avnadmin
-    password: ${PG_PASSWORD}
+    password: AVNS_yDWtELnIM9VVAzt6qbx
 
 
 management:
