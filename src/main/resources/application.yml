@@ -41,7 +41,7 @@ spring:
 #    port: 6379
 #    password: ${REDIS_PASSWORD}
   profiles:
-    active: ${SPRING_PROFILE_ACTIVE}
+    active: local
 #  servlet:
 #    multipart:
 #      max-file-size: 5MB
@@ -110,16 +110,3 @@ management:
 #mongo:
 #  host: mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@${MONGODB_HOST}:27017/${MONGODB_DATABASE}
 #  database: ${MONGODB_DATABASE}
-
-eLabs:
-  sms:
-    url: "https://2factor.in"
-    token: "ef1674ab-4e49-11eb-8153-0200cd936042"
-
-aws:
-  accessKey: ${AWS_ACCESS_KEY_ID}
-  secretKey: ${AWS_SECRET_KEY}
-  bucket:
-    category-image: video-evidence-dev
-
-open_ai_key: ${OPEN_API_KEY}

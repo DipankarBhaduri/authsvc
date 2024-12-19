@@ -1,7 +1,9 @@
 package com.mingleHub.authsvc.services.impl;
 
 import com.mingleHub.authsvc.auth.impl.JwtSvcImpl;
+import com.mingleHub.authsvc.constants.EventType;
 import com.mingleHub.authsvc.constants.Role;
+import com.mingleHub.authsvc.constants.UserStatus;
 import com.mingleHub.authsvc.dao.User;
 import com.mingleHub.authsvc.dto.onboarding.RegisterRequest;
 import com.mingleHub.authsvc.dto.auth.AuthenticationRequest;
@@ -11,6 +13,7 @@ import com.mingleHub.authsvc.exceptions.IncorrectCredentialsException;
 import com.mingleHub.authsvc.exceptions.UserNotFoundException;
 import com.mingleHub.authsvc.repositories.UserInfoRepository;
 import com.mingleHub.authsvc.services.AuthSvc;
+import com.mingleHub.authsvc.utils.EventLogHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,8 +21,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.HashMap;
 import java.util.UUID;
-
 import static com.mingleHub.authsvc.messages.ErrorLogs.*;
 import static com.mingleHub.authsvc.messages.ErrorMessages.*;
 
@@ -30,18 +33,21 @@ public class AuthSvcImpl implements AuthSvc {
     private final JwtSvcImpl jwtSvc;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final EventLogHelper eventLogHelper;
 
     @Autowired
     public AuthSvcImpl(
             UserInfoRepository userInfoRepository,
             JwtSvcImpl jwtSvc,
             AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            EventLogHelper eventLogHelper
     ) {
         this.userInfoRepository = userInfoRepository;
         this.jwtSvc = jwtSvc;
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
+        this.eventLogHelper = eventLogHelper;
     }
 
     @Override
@@ -57,8 +63,12 @@ public class AuthSvcImpl implements AuthSvc {
                 .setEmail(registerRequest.getEmail())
                 .setPassword(passwordEncoder.encode(registerRequest.getPassword()))
                 .setRole(Role.USER)
+                .setStatus(UserStatus.NEW)
                 .setFirstName(registerRequest.getFirstName())
                 .setLastName(registerRequest.getLastName());
+
+        eventLogHelper.createEventLog(
+                EventType.USER_CREATION, userObject.getId().toString(), new HashMap<>(), null);
 
         userInfoRepository.save(userObject);
         String jwtToken = jwtSvc.generateToken(userObject);
@@ -88,6 +98,9 @@ public class AuthSvcImpl implements AuthSvc {
                            });
 
         String jwtToken = jwtSvc.generateToken(user);
+        eventLogHelper.createEventLog(
+                EventType.USER_LOGIN, user.getId().toString(), new HashMap<>(), null);
+
         return new AuthenticationResponse().setAccessToken(jwtToken);
     }
 }

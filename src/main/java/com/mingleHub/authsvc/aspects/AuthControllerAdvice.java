@@ -23,7 +23,7 @@ public class AuthControllerAdvice {
                     DuplicateEmailException.class
             }
     )
-    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     public Problem onDuplicateEmailException (BaseException e) {
 		return new Problem()
 					   .setTitle(ErrorTitle.DUPLICATE_EMAIL.toString())
@@ -47,7 +47,7 @@ public class AuthControllerAdvice {
 					IncorrectCredentialsException.class
 			}
 	)
-	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public Problem onIncorrectCredentialsExceptionError (BaseException e) {
 		return new Problem()
 					   .setTitle(ErrorTitle.BAD_CREDENTIALS.toString())
