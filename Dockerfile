@@ -1,17 +1,24 @@
-# Use a base image with JDK 21
+# # Use a base image with JDK 21
+# FROM eclipse-temurin:21-jdk-alpine
+#
+# # Set the working directory inside the container
+# WORKDIR /app
+#
+# # Copy the JAR file from the target directory to the working directory
+# COPY target/authsvc-0.0.1-SNAPSHOT.jar app.jar
+#
+# # Expose the port your Spring Boot app runs on
+# EXPOSE 9990
+#
+# # Command to run the JAR file
+# ENTRYPOINT ["java", "-jar", "app.jar"]
+
 FROM eclipse-temurin:21-jdk-alpine
-
-# Set the working directory inside the container
-WORKDIR /app
-
-# Copy the JAR file from the target directory to the working directory
-COPY target/authsvc-0.0.1-SNAPSHOT.jar app.jar
-
-# Expose the port your Spring Boot app runs on
-EXPOSE 9990
-
-# Command to run the JAR file
-ENTRYPOINT ["java", "-jar", "app.jar"]
+VOLUME /tmp
+EXPOSE 9999
+ARG JAR_FILE=target/authsvc-0.0.1-SNAPSHOT.jar
+ADD ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
 
 
 # mvn clean package -> create a new jar file
