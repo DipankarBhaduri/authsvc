@@ -1,0 +1,11 @@
+package com.mingleHub.authsvc.services.impl;
+
+import com.mingleHub.authsvc.services.AssessmentSvc;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+public class AssessmentSvcImpl implements AssessmentSvc{
+
+}
